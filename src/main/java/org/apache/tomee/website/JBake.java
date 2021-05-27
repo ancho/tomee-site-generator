@@ -2,7 +2,6 @@ package org.apache.tomee.website;
 
 import com.orientechnologies.orient.core.Orient;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFileFilter;
@@ -10,8 +9,11 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.tomee.embedded.Configuration;
 import org.apache.tomee.embedded.Container;
-import org.jbake.app.ConfigUtil;
+import org.jbake.app.JBakeException;
 import org.jbake.app.Oven;
+import org.jbake.app.configuration.JBakeConfiguration;
+import org.jbake.app.configuration.JBakeConfigurationFactory;
+import org.jbake.launcher.Baker;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -21,8 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -73,14 +73,14 @@ public class JBake {
             final Orient orient = Orient.instance();
             try {
                 orient.startup();
-
-                final Oven oven = new Oven(sources.getJbake(), destination, new CompositeConfiguration() {{
-                    addConfiguration(ConfigUtil.load(sources.getJbake()));
-                }}, true);
-                oven.setupPaths();
+                JBakeConfiguration configuration = new JBakeConfigurationFactory().createDefaultJbakeConfiguration(
+                    sources.getJbake(),
+                    destination,
+                    true
+                );
 
                 System.out.println("  > baking");
-                oven.bake();
+                new Baker().bake(configuration);
 
 //                if (!skipPdf) {
 //                    System.out.println("  > pdfifying");
@@ -89,6 +89,9 @@ public class JBake {
 
                 copyFileLayoutToDirStructure(destination);
                 System.out.println("  > done :)");
+            } catch (final JBakeException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
             } catch (final Exception e) {
                 e.printStackTrace();
             } finally {

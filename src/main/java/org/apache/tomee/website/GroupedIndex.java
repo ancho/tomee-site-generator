@@ -16,9 +16,13 @@
  */
 package org.apache.tomee.website;
 
-import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration2.CompositeConfiguration;
 import org.apache.openejb.loader.IO;
 import org.jbake.app.Parser;
+import org.jbake.app.configuration.DefaultJBakeConfiguration;
+import org.jbake.app.configuration.JBakeConfiguration;
+import org.jbake.app.configuration.JBakeConfigurationFactory;
+import org.jbake.model.DocumentModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,10 +46,13 @@ public class GroupedIndex {
 
     private final File directory;
     private final String type;
+    private final Parser parser;
 
     public GroupedIndex(final File directory, final String type) {
         this.directory = directory;//target/jbake/<tomeeBranch> or target/jbake/<tomeeBranch>/docs
         this.type = type;
+        JBakeConfiguration configuration = new JBakeConfigurationFactory().createDefaultJbakeConfiguration(directory, directory, true);
+        this.parser = new Parser(configuration);
     }
 
     public static void process(final File directory, final String type) {
@@ -249,8 +256,7 @@ public class GroupedIndex {
 
 
     public Doc parse(final File file) {
-        final Parser parser = new Parser(new CompositeConfiguration(), file.getAbsolutePath());
-        final Map<String, Object> map = parser.processFile(file);
+        final DocumentModel map = parser.processFile(file);
 
         if (map == null) {
             return new Doc("Unknown", Docs.simpleName(file), Docs.href(directory, file), file);
@@ -284,9 +290,9 @@ public class GroupedIndex {
 
     }
 
-    private String getTitle(final Map<String, Object> map, final File file) {
+    private String getTitle(final DocumentModel map, final File file) {
         if (hasValue(map.get("short-title"))) return map.get("short-title") + "";
-        if (hasValue(map.get("title"))) return map.get("title") + "";
+        if (hasValue(map.getTitle())) return map.getTitle();
         return Docs.simpleName(file);
     }
 

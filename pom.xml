@@ -107,11 +107,16 @@
       <artifactId>groovy-dateutil</artifactId>
       <version>3.0.7</version>
     </dependency>
-<!--    <dependency>
-      <groupId>org.pegdown</groupId>
-      <artifactId>pegdown</artifactId>
-      <version>1.6.0</version>
-    </dependency> -->
+    <dependency>
+      <groupId>com.vladsch.flexmark</groupId>
+      <artifactId>flexmark</artifactId>
+      <version>0.62.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.vladsch.flexmark</groupId>
+      <artifactId>flexmark-profile-pegdown</artifactId>
+      <version>0.62.2</version>
+    </dependency>
     <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
       <artifactId>svnkit</artifactId>

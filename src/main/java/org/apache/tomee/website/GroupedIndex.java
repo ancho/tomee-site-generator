@@ -16,10 +16,8 @@
  */
 package org.apache.tomee.website;
 
-import org.apache.commons.configuration2.CompositeConfiguration;
 import org.apache.openejb.loader.IO;
 import org.jbake.app.Parser;
-import org.jbake.app.configuration.DefaultJBakeConfiguration;
 import org.jbake.app.configuration.JBakeConfiguration;
 import org.jbake.app.configuration.JBakeConfigurationFactory;
 import org.jbake.model.DocumentModel;

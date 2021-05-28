@@ -10,7 +10,6 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.tomee.embedded.Configuration;
 import org.apache.tomee.embedded.Container;
 import org.jbake.app.JBakeException;
-import org.jbake.app.Oven;
 import org.jbake.app.configuration.JBakeConfiguration;
 import org.jbake.app.configuration.JBakeConfigurationFactory;
 import org.jbake.launcher.Baker;
